@@ -30,6 +30,7 @@ async function run() {
 
         const db = client.db("wanderlust");
         const destinationCollection = db.collection("destinations");
+        const bookingCollection = db.collection('bookings');
 
 
         app.get('/destination', async (req, res) => {
@@ -46,7 +47,7 @@ async function run() {
 
         app.post('/destination', async (req, res) => {
             const destinationData = req.body;
-            console.log(destinationData);
+            // console.log(destinationData);
             const result = await destinationCollection.insertOne(destinationData);
 
             res.send(result);
@@ -69,6 +70,32 @@ async function run() {
         app.delete('/destination/:id', async (req, res) => {
             const { id } = req.params;
             const result = await destinationCollection.deleteOne({ _id: new ObjectId(id) });
+            res.send(result);
+        });
+
+
+
+        app.get("/booking/:userId", async (req, res) => {
+            const { userId } = req.params;
+
+            const result = await bookingCollection.find({ userId: userId }).toArray(); //Note: {userId: userId} ---> {{userId(from mongodb): userId(from req.params er userId}}
+
+            res.send(result);
+        })
+
+        app.post('/booking', async (req, res) => {
+            const bookingData = req.body;
+            // console.log(destinationData);
+            const result = await bookingCollection.insertOne(bookingData);
+
+            res.send(result);
+        })
+
+
+        app.delete('/booking/:bookingId', async (req, res) => {
+            const { bookingId } = req.params;
+            const result = await bookingCollection.deleteOne({ _id: new ObjectId(bookingId) });
+            
             res.send(result);
         });
 
