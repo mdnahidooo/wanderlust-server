@@ -38,7 +38,19 @@ async function run() {
             res.send(result);
         });
 
-        app.get('/destination/:id', async (req, res) => {
+        app.get('/destination/:id', (req, res, next) => {
+            const header = req.headers.authorization;
+            // console.log(header);
+            // if (header === 'logged in') {
+            //     next();
+            // }
+            // else {
+            //     res.status(401).json({ message: "Unauthorized" });
+            // }
+
+            next();
+
+        }, async (req, res) => {
             const { id } = req.params;
             const result = await destinationCollection.findOne({ _id: new ObjectId(id) });
             res.send(result);
@@ -95,7 +107,7 @@ async function run() {
         app.delete('/booking/:bookingId', async (req, res) => {
             const { bookingId } = req.params;
             const result = await bookingCollection.deleteOne({ _id: new ObjectId(bookingId) });
-            
+
             res.send(result);
         });
 
