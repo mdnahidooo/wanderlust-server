@@ -108,7 +108,7 @@ async function run() {
 
 
 
-        app.get("/booking/:userId", async (req, res) => {
+        app.get("/booking/:userId", verifyToken, async (req, res) => {
             const { userId } = req.params;
 
             const result = await bookingCollection.find({ userId: userId }).toArray(); //Note: {userId: userId} ---> {{userId(from mongodb): userId(from req.params er userId}}
